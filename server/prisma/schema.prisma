@@ -1,0 +1,53 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            Int    @id @default(autoincrement())
+  username      String @unique
+  password_hash String
+}
+
+model Station {
+  id      Int    @id @default(autoincrement())
+  name    String
+  name_hi String?
+  city    String?
+  code    String?
+  nodes   Node[]
+  edges   Edge[]
+}
+
+model Node {
+  id         Int     @id @default(autoincrement())
+  station_id Int
+  station    Station @relation(fields: [station_id], references: [id], onDelete: Cascade)
+  name       String
+  name_hi    String?
+  type       String
+  floor      Int
+  x          Float
+  y          Float
+  accessible Boolean @default(true)
+  
+  edgesFrom  Edge[]  @relation("EdgeFrom")
+  edgesTo    Edge[]  @relation("EdgeTo")
+}
+
+model Edge {
+  id            Int     @id @default(autoincrement())
+  station_id    Int
+  station       Station @relation(fields: [station_id], references: [id], onDelete: Cascade)
+  from_node     Int
+  fromNode      Node    @relation("EdgeFrom", fields: [from_node], references: [id], onDelete: Cascade)
+  to_node       Int
+  toNode        Node    @relation("EdgeTo", fields: [to_node], references: [id], onDelete: Cascade)
+  distance      Float
+  is_accessible Boolean @default(true)
+  has_stairs    Boolean @default(false)
+}

@@ -1,0 +1,59 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Production build artifacts
+client/dist/
+dist/
+dist-ssr/
+
+# Environment files & Secrets
+.env
+.env.*
+*.env
+client/.env
+client/.env.*
+server/.env
+server/.env.*
+!.env.example
+!client/.env.example
+!server/.env.example
+
+# Credentials & Keys
+*.pem
+*.key
+*.cert
+*.crt
+
+# SQLite Database & Storage
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+server/prisma/*.db
+server/prisma/*.db-journal
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Test & Coverage
+coverage/
+.nyc_output/
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
