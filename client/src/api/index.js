@@ -1,12 +1,41 @@
 import axios from 'axios';
 import { TOKEN_STORAGE_KEY } from '../context/AuthContext';
 
+const PROD_API_URL = 'https://asset-surprised-panda.abasthan.app';
+
+const getBaseURL = () => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  const isProduction =
+    import.meta.env.PROD ||
+    (typeof window !== 'undefined' &&
+      window.location.hostname !== 'localhost' &&
+      window.location.hostname !== '127.0.0.1');
+
+  if (isProduction) {
+    if (!envUrl || envUrl.includes('localhost') || envUrl.includes('127.0.0.1')) {
+      return PROD_API_URL;
+    }
+    return envUrl;
+  }
+  return envUrl || 'http://localhost:5000';
+};
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000',
+  baseURL: getBaseURL(),
 });
 
-// Request interceptor: attach JWT token if present in localStorage
+// Request interceptor: attach JWT token if present in localStorage and ensure production URL on production hosts
 api.interceptors.request.use((config) => {
+  if (
+    typeof window !== 'undefined' &&
+    window.location.hostname !== 'localhost' &&
+    window.location.hostname !== '127.0.0.1'
+  ) {
+    if (!config.baseURL || config.baseURL.includes('localhost') || config.baseURL.includes('127.0.0.1')) {
+      config.baseURL = PROD_API_URL;
+    }
+  }
+
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem(TOKEN_STORAGE_KEY);
     if (token) {

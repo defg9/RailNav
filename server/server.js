@@ -9,13 +9,21 @@ const nodeController = require('./controllers/nodeController');
 const edgeController = require('./controllers/edgeController');
 const authenticateToken = require('./middleware/auth');
 
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://localhost:4173',  // vite preview
+  'https://fantastic-bonbon-2faafd.netlify.app',
+  /^https:\/\/.*--fantastic-bonbon-2faafd\.netlify\.app$/,
+];
+
+if (process.env.CLIENT_URL && !allowedOrigins.includes(process.env.CLIENT_URL)) {
+  allowedOrigins.push(process.env.CLIENT_URL);
+}
+
 const app = express();
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-    'http://localhost:4173',  // vite preview
-  ],
+  origin: allowedOrigins,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
 app.use(express.json());
