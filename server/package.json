@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
+    "build": "prisma generate && prisma db push && npm run seed",
     "seed": "node seed/seed.js",
     "test": "jest",
     "prisma:generate": "prisma generate",
